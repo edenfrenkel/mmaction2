@@ -98,8 +98,8 @@ optimizer = dict(
     weight_decay=0.0001)  # this lr is used for 1 gpu
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[20, 40])
-total_epochs = 100
+lr_config = dict(policy='step', step=[10, 20])
+total_epochs = 30
 checkpoint_config = dict(interval=5)
 evaluation = dict(
     interval=1, metrics=['mean_average_precision'],
@@ -113,7 +113,7 @@ log_config = dict(
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/tsn_r50_1x1x8_100e_cater_rgb/'
+work_dir = './work_dirs/tsn_r50_1x1x8_30e_cater_rgb/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
