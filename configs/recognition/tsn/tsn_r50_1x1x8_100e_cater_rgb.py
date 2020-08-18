@@ -12,7 +12,7 @@ model = dict(
         in_channels=2048,
         spatial_type='avg',
         consensus=dict(type='AvgConsensus', dim=1),
-        dropout_ratio=0.4,
+        dropout_ratio=0.5,
         init_std=0.01,
         multi_class=True,
         loss_cls=dict(type='BinaryLogisticRegressionLoss')))
@@ -57,7 +57,7 @@ test_pipeline = [
         type='SampleFrames',
         clip_len=1,
         frame_interval=1,
-        num_clips=25,
+        num_clips=8,
         test_mode=True),
     dict(type='DecordDecode'),
     dict(type='Normalize', **img_norm_cfg),
@@ -90,12 +90,13 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(
-    type='SGD', lr=0.001, momentum=0.9,
-    weight_decay=0.0001)  # this lr is used for 1 gpu
-optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+optimizer = dict(type='Adam')
+# optimizer = dict(
+#     type='SGD', lr=0.001, momentum=0.9,
+#     weight_decay=0.0001)  # this lr is used for 1 gpu
+# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[40, 80])
+# lr_config = dict(policy='step', step=[40, 80])
 total_epochs = 100
 checkpoint_config = dict(interval=5)
 evaluation = dict(
