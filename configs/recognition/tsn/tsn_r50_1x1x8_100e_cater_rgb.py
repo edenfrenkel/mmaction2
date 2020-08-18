@@ -11,8 +11,7 @@ model = dict(
         num_classes=301,
         in_channels=2048,
         spatial_type='avg',
-        # consensus=dict(type='LSTMConsensus', input_size=2048),
-        consensus=dict(type='AvgConsensus', dim=1),
+        consensus=dict(type='AvgConsensus', dim=1), # 0.3747
         dropout_ratio=0.5,
         init_std=0.01,
         multi_class=True,
@@ -91,15 +90,15 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='Adam', lr=5e-5)
-optimizer_config = dict()
-lr_config = dict(policy='fixed')
-# optimizer = dict(
-#     type='SGD', lr=0.001, momentum=0.9,
-#     weight_decay=0.0001)  # this lr is used for 1 gpu
-# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+# optimizer = dict(type='Adam', lr=5e-5)
+# optimizer_config = dict()
+# lr_config = dict(policy='fixed')
+optimizer = dict(
+    type='SGD', lr=0.0001, momentum=0.9,
+    weight_decay=0.0001)  # this lr is used for 1 gpu
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-# lr_config = dict(policy='step', step=[1, 10])
+lr_config = dict(policy='step', step=[20, 40])
 total_epochs = 100
 checkpoint_config = dict(interval=5)
 evaluation = dict(
