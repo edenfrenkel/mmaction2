@@ -11,7 +11,7 @@ model = dict(
         num_classes=301,
         in_channels=2048,
         spatial_type='avg',
-        consensus=dict(type='AvgConsensus', dim=1), # 0.3747
+        consensus=dict(type='AvgConsensus', dim=1),
         dropout_ratio=0.5,
         init_std=0.01,
         multi_class=True,
