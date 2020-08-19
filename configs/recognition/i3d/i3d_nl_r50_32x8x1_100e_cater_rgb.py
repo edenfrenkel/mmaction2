@@ -23,7 +23,8 @@ model = dict(
         spatial_type='avg',
         dropout_ratio=0.5,
         init_std=0.01,
-        multi_class=True))
+        multi_class=True,
+        loss_cls=dict(type='BinaryLogisticRegressionLoss')))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(average_clips=None)
