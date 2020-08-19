@@ -22,10 +22,12 @@ class Recognizer3D(BaseRecognizer):
     def forward_test(self, imgs):
         """Defines the computation performed at every call when evaluation and
         testing."""
-        imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+        batches = imgs.shape[0]
+        imgs = imgs.reshape((-1,) + imgs.shape[2:])
+        num_segs = imgs.shape[0] // batches
 
         x = self.extract_feat(imgs)
-        cls_score = self.cls_head(x)
+        cls_score = self.cls_head(x, num_segs)
         cls_score = self.average_clip(cls_score)
 
         return cls_score.cpu().numpy()
@@ -41,8 +43,10 @@ class Recognizer3D(BaseRecognizer):
         Returns:
             Tensor: Class score.
         """
-        imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+        batches = imgs.shape[0]
+        imgs = imgs.reshape((-1,) + imgs.shape[2:])
+        num_segs = imgs.shape[0] // batches
 
         x = self.extract_feat(imgs)
-        outs = (self.cls_head(x), )
+        outs = (self.cls_head(x, num_segs), )
         return outs
