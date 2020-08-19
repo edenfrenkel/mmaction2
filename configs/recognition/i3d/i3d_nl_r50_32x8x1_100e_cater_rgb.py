@@ -77,6 +77,7 @@ data = dict(
     val=dict(
         type=dataset_type,
         ann_file=ann_file_val,
+        multi_class=True,
         num_classes=301,
         data_prefix=data_root_val,
         pipeline=val_pipeline),
