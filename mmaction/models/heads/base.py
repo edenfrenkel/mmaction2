@@ -7,6 +7,26 @@ from ...core import top_k_accuracy
 from ..builder import build_loss
 
 
+class LSTMConsensus(nn.Module):
+    """LSTM consensus module.
+
+    Args:
+        input_size (int): The number of expected features in the input x
+        num_layers (int): Number of recurrent layers
+            Default: 1.
+        dim (int): Decide which dim consensus function to apply.
+            Default: 1.
+    """
+
+    def __init__(self, input_size, hidden_size, num_layers=1, batch_first=True):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=batch_first)
+
+    def forward(self, x):
+        """Defines the computation performed at every call."""
+        return self.lstm(x.view(x.size(0), x.size(1), -1))[0][:, -1, :].view(x.size(0), 1, *(x.size()[2:]))
+
+
 class AvgConsensus(nn.Module):
     """Average consensus module.
 

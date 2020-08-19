@@ -2,7 +2,7 @@ import torch.nn as nn
 from mmcv.cnn import normal_init
 
 from ..registry import HEADS
-from .base import BaseHead
+from .base import AvgConsensus, LSTMConsensus, BaseHead
 
 
 @HEADS.register_module()
@@ -26,12 +26,24 @@ class I3DHead(BaseHead):
                  spatial_type='avg',
                  dropout_ratio=0.5,
                  init_std=0.01,
-                 multi_class=False):
+                 multi_class=False,
+                 consensus=dict(type='AvgConsensus', dim=1)):
         super().__init__(num_classes, in_channels, loss_cls, multi_class=multi_class)
 
         self.spatial_type = spatial_type
         self.dropout_ratio = dropout_ratio
         self.init_std = init_std
+
+        consensus_ = consensus.copy()
+
+        consensus_type = consensus_.pop('type')
+        if consensus_type == 'AvgConsensus':
+            self.consensus = AvgConsensus(**consensus_)
+        elif consensus_type == 'LSTMConsensus':
+            self.consensus = LSTMConsensus(**consensus_)
+        else:
+            self.consensus = None
+
         if self.dropout_ratio != 0:
             self.dropout = nn.Dropout(p=self.dropout_ratio)
         else:
@@ -48,17 +60,26 @@ class I3DHead(BaseHead):
         """Initiate the parameters from scratch."""
         normal_init(self.fc_cls, std=self.init_std)
 
-    def forward(self, x):
+    def forward(self, x, num_segs=1):
         """Defines the computation performed at every call.
 
         Args:
             x (torch.Tensor): The input data.
+            num_segs (int): Number of segments into which a video
+                is divided.
 
         Returns:
             torch.Tensor: The classification scores for input samples.
         """
-        # [N, in_channels, 4, 7, 7]
+        # [N * num_segs, in_channels, 4, 7, 7]
         x = self.avg_pool(x)
+        # [N * num_segs, in_channels, 1, 1, 1]
+        x = x.reshape((-1, num_segs) + x.shape[1:])
+        # [N, num_segs, in_channels, 1, 1, 1]
+        x = self.consensus(x)
+        # in_channels now fits the output channels of the consensus
+        # [N, 1, in_channels, 1, 1, 1]
+        x = x.squeeze(1)
         # [N, in_channels, 1, 1, 1]
         if self.dropout is not None:
             x = self.dropout(x)

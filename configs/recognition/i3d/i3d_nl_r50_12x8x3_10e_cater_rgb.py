@@ -19,11 +19,13 @@ model = dict(
     cls_head=dict(
         type='I3DHead',
         num_classes=301,
-        in_channels=2048,
+        in_channels=512,
         spatial_type='avg',
         dropout_ratio=0.5,
         init_std=0.01,
         multi_class=True,
+        consensus=dict(type='LSTMConsensus',
+                       input_size=2048, hidden_size=512),
         loss_cls=dict(type='BinaryLogisticRegressionLoss')))
 # model training and testing settings
 train_cfg = None
@@ -39,7 +41,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SampleFrames', clip_len=32, frame_interval=8, num_clips=1),
+    dict(type='SampleFrames', clip_len=12, frame_interval=8, num_clips=3),
     dict(type='DecordDecode'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
@@ -48,7 +50,7 @@ train_pipeline = [
 ]
 val_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SampleFrames', clip_len=32, frame_interval=8, num_clips=1),
+    dict(type='SampleFrames', clip_len=12, frame_interval=8, num_clips=3),
     dict(type='DecordDecode'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
@@ -57,7 +59,7 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SampleFrames', clip_len=32, frame_interval=8, num_clips=1),
+    dict(type='SampleFrames', clip_len=12, frame_interval=8, num_clips=3),
     dict(type='DecordDecode'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
@@ -89,16 +91,13 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='Adam')
-optimizer_config = dict()
-lr_config = dict(policy='fixed')
-# optimizer = dict(
-#     type='SGD', lr=0.00125, momentum=0.9,
-#     weight_decay=0.0001)
-# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+optimizer = dict(
+    type='SGD', lr=0.001, momentum=0.9,
+    weight_decay=0.0001)
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-# lr_config = dict(policy='step', step=[40, 80])
-total_epochs = 100
+lr_config = dict(policy='step', step=[5])
+total_epochs = 10
 checkpoint_config = dict(interval=5)
 evaluation = dict(
     interval=1, metrics=['mean_average_precision'],
@@ -112,7 +111,7 @@ log_config = dict(
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/i3d_nl_r50_32x8x1_100e_cater_rgb/'
+work_dir = './work_dirs/i3d_nl_r50_12x8x3_10e_cater_rgb/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

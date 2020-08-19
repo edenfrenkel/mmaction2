@@ -2,7 +2,7 @@ import torch.nn as nn
 from mmcv.cnn import normal_init
 
 from ..registry import HEADS
-from .base import AvgConsensus, BaseHead
+from .base import AvgConsensus, LSTMConsensus, BaseHead
 
 
 @HEADS.register_module()
@@ -50,6 +50,8 @@ class TSNHead(BaseHead):
         consensus_type = consensus_.pop('type')
         if consensus_type == 'AvgConsensus':
             self.consensus = AvgConsensus(**consensus_)
+        elif consensus_type == 'LSTMConsensus':
+            self.consensus = LSTMConsensus(**consensus_)
         else:
             self.consensus = None
 
@@ -85,6 +87,7 @@ class TSNHead(BaseHead):
         x = x.reshape((-1, num_segs) + x.shape[1:])
         # [N, num_segs, in_channels, 1, 1]
         x = self.consensus(x)
+        # in_channels now fits the output channels of the consensus
         # [N, 1, in_channels, 1, 1]
         x = x.squeeze(1)
         # [N, in_channels, 1, 1]

@@ -8,10 +8,12 @@ class Recognizer3D(BaseRecognizer):
 
     def forward_train(self, imgs, labels):
         """Defines the computation performed at every call when training."""
+        batches = imgs.shape[0]
         imgs = imgs.reshape((-1, ) + imgs.shape[2:])
+        num_segs = imgs.shape[0] // batches
 
         x = self.extract_feat(imgs)
-        cls_score = self.cls_head(x)
+        cls_score = self.cls_head(x, num_segs)
         gt_labels = labels.squeeze()
         loss = self.cls_head.loss(cls_score, gt_labels)
 
