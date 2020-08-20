@@ -97,13 +97,13 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-# optimizer = dict(type='Adam', lr=0.001)
-# optimizer_config = dict()
-# lr_config = dict(policy='fixed')
-optimizer = dict(
-    type='SGD', lr=0.000625, momentum=0.9,
-    weight_decay=0.0001)
-optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+optimizer = dict(type='Adam', lr=0.001)
+optimizer_config = dict()
+lr_config = dict(policy='fixed')
+# optimizer = dict(
+#     type='SGD', lr=0.000625, momentum=0.9,
+#     weight_decay=0.0001)
+# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
 lr_config = dict(policy='step', step=[16, 36])
 total_epochs = 50
