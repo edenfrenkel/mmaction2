@@ -105,7 +105,7 @@ optimizer = dict(
     weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[16, 36])
+lr_config = dict(policy='step', step=[1, 36])
 total_epochs = 50
 checkpoint_config = dict(interval=5)
 evaluation = dict(
