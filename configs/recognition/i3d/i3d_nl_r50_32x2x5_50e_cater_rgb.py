@@ -109,7 +109,7 @@ evaluation = dict(
     interval=1, metrics=['mean_average_precision'],
     key_indicator='mean_average_precision', rule='greater')
 log_config = dict(
-    interval=10,
+    interval=20,
     hooks=[
         dict(type='TextLoggerHook'),
         # dict(type='TensorboardLoggerHook'),
