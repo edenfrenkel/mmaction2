@@ -73,8 +73,8 @@ test_pipeline = [
     dict(type='ToTensor', keys=['imgs'])
 ]
 data = dict(
-    videos_per_gpu=3,
-    workers_per_gpu=3,
+    videos_per_gpu=2,
+    workers_per_gpu=2,
     train=dict(
         type=dataset_type,
         ann_file=ann_file_train,
@@ -97,22 +97,19 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-# optimizer = dict(type='Adam', lr=0.001)
-# optimizer_config = dict()
-# lr_config = dict(policy='fixed')
 optimizer = dict(
-    type='SGD', lr=0.000625*3/8, momentum=0.9,
-    weight_decay=0.0001)
+    type='SGD', lr=0.00125, momentum=0.9,
+    weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[1, 36])
+lr_config = dict(policy='step', step=[20, 40])
 total_epochs = 50
 checkpoint_config = dict(interval=5)
 evaluation = dict(
     interval=1, metrics=['mean_average_precision'],
     key_indicator='mean_average_precision', rule='greater')
 log_config = dict(
-    interval=20,
+    interval=10,
     hooks=[
         dict(type='TextLoggerHook'),
         # dict(type='TensorboardLoggerHook'),
