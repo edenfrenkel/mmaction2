@@ -97,15 +97,12 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-# optimizer = dict(
-#     type='SGD', lr=0.00125, momentum=0.9,
-#     weight_decay=0.0001)  # this lr is used for 4 gpus
-# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+optimizer = dict(
+    type='SGD', lr=1e-4, momentum=0.9,
+    weight_decay=0.0001)  # this lr is used for 4 gpus
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-# lr_config = dict(policy='step', step=[20, 40])
-optimizer = dict(type='Adam', lr=0.00125)
-optimizer_config = dict()
-lr_config = dict(policy='fixed')
+lr_config = dict(policy='step', step=[20, 40])
 total_epochs = 50
 checkpoint_config = dict(interval=5)
 evaluation = dict(
