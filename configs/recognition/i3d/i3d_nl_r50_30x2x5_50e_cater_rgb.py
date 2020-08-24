@@ -43,9 +43,10 @@ train_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='CenterCrop', crop_size=240),
-    dict(type='RandomCrop', size=224),
-    dict(type='Flip', flip_ratio=0.5),
+    # dict(type='CenterCrop', crop_size=240),
+    # dict(type='RandomCrop', size=224),
+    dict(type='CenterCrop', crop_size=224),
+    # dict(type='Flip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -53,7 +54,7 @@ train_pipeline = [
 ]
 val_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5),
+    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
     dict(type='DecordDecode'),
     dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
@@ -63,7 +64,7 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5),
+    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
     dict(type='DecordDecode'),
     dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
