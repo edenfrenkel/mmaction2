@@ -41,7 +41,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
     # dict(type='CenterCrop', crop_size=240),
     # dict(type='RandomCrop', size=224),
@@ -55,7 +55,7 @@ train_pipeline = [
 ]
 val_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
     dict(type='CenterCrop', crop_size=240),
     dict(type='Resize', scale=(224, 224), keep_ratio=False),
@@ -66,7 +66,7 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
     dict(type='CenterCrop', crop_size=240),
     dict(type='Resize', scale=(224, 224), keep_ratio=False),
@@ -101,7 +101,7 @@ data = dict(
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
-    type='SGD', lr=0.00125, momentum=0.9,
+    type='SGD', lr=0.000625, momentum=0.9,
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
@@ -120,7 +120,7 @@ log_config = dict(
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/i3d_nl_r50_30x2x5_50e_cater_rgb/'
+work_dir = './work_dirs/i3d_nl_r50_15x2x10_50e_cater_rgb/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
