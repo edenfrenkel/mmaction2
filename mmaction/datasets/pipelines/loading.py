@@ -180,19 +180,21 @@ class SampleFrames(object):
 
 @PIPELINES.register_module()
 class SequentialSampleFrames(object):
-    def __init__(self, clip_len, frame_interval=1, num_clips=1, start_index=(0,)):
+    def __init__(self, clip_len, frame_interval=1, num_clips=1, jitter=False, start_index=0):
         self.clip_len = clip_len
         self.frame_interval = frame_interval
         self.num_clips = num_clips
+        self.jitter = jitter
         self.start_index = start_index
 
     def __call__(self, results):
         total_frames = results['total_frames']
-        start_index = np.random.choice(self.start_index)
-        frame_inds = np.arange(start_index,
-                               start_index + self.frame_interval * self.clip_len * self.num_clips,
+        frame_inds = np.arange(self.start_index,
+                               self.start_index + self.frame_interval * self.clip_len * self.num_clips,
                                self.frame_interval,
                                dtype=np.int)
+        if self.jitter:
+            frame_inds += np.random.choice(np.arange(self.frame_interval, dtype=np.int), size=frame_inds.shape)
 
         results['frame_inds'] = frame_inds % total_frames
         results['clip_len'] = self.clip_len
