@@ -41,11 +41,12 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
     # dict(type='CenterCrop', crop_size=240),
     # dict(type='RandomCrop', size=224),
-    dict(type='CenterCrop', crop_size=224),
+    dict(type='CenterCrop', crop_size=240),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     # dict(type='Flip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
@@ -54,9 +55,10 @@ train_pipeline = [
 ]
 val_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='CenterCrop', crop_size=224),
+    dict(type='CenterCrop', crop_size=240),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -64,17 +66,18 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5, jitter=True),
+    dict(type='SequentialSampleFrames', clip_len=6, frame_interval=5, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='CenterCrop', crop_size=224),
+    dict(type='CenterCrop', crop_size=240),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
     dict(type='ToTensor', keys=['imgs'])
 ]
 data = dict(
-    videos_per_gpu=2,
-    workers_per_gpu=2,
+    videos_per_gpu=4,
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         ann_file=ann_file_train,
@@ -98,7 +101,7 @@ data = dict(
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
-    type='SGD', lr=0.000625, momentum=0.9,
+    type='SGD', lr=0.00125, momentum=0.9,
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
