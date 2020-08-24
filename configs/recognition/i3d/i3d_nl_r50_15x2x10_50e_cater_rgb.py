@@ -43,10 +43,17 @@ train_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
+    dict(type='Resize', scale=(-1, 256)),
+    dict(
+        type='MultiScaleCrop',
+        input_size=224,
+        scales=(1, 0.8),
+        random_crop=False,
+        max_wh_scale_gap=0),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='Flip', flip_ratio=0.5),
     # dict(type='CenterCrop', crop_size=240),
     # dict(type='RandomCrop', size=224),
-    dict(type='CenterCrop', crop_size=240),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     # dict(type='Flip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
@@ -57,8 +64,10 @@ val_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='CenterCrop', crop_size=240),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='Resize', scale=(-1, 256)),
+    dict(type='CenterCrop', crop_size=224),
+    dict(type='Flip', flip_ratio=0),
+    # dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -68,8 +77,10 @@ test_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='CenterCrop', crop_size=240),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='Resize', scale=(-1, 256)),
+    dict(type='CenterCrop', crop_size=224),
+    dict(type='Flip', flip_ratio=0),
+    # dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -101,7 +112,7 @@ data = dict(
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
-    type='SGD', lr=0.00125*(4/8), momentum=0.9,
+    type='SGD', lr=0.00125*(6/8), momentum=0.9,
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
