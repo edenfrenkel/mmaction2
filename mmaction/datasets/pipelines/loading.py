@@ -179,6 +179,23 @@ class SampleFrames(object):
 
 
 @PIPELINES.register_module()
+class SequentialSampleFrames(object):
+    def __init__(self, clip_len, frame_interval=1, start_index=0):
+        self.clip_len = clip_len
+        self.frame_interval = frame_interval
+        self.start_index = start_index
+
+    def __call__(self, results):
+        frame_inds = np.arange(self.start_index, results['total_frames'], self.frame_interval)
+        num_clips = frame_inds.shape[0] // self.clip_len
+        frame_inds = frame_inds[:num_clips * self.clip_len]
+        results['frame_inds'] = frame_inds
+        results['clip_len'] = self.clip_len
+        results['frame_interval'] = self.frame_interval
+        results['num_clips'] = num_clips
+        return results
+
+@PIPELINES.register_module()
 class UntrimmedSampleFrames(object):
     """Sample frames from the untrimmed video.
 
