@@ -43,7 +43,7 @@ train_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -53,7 +53,7 @@ val_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -63,7 +63,7 @@ test_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -94,12 +94,10 @@ data = dict(
         data_prefix=data_root_val,
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='Adam')
-optimizer_config = dict()
-# optimizer = dict(
-#     type='SGD', lr=0.000125*(6/8), momentum=0.9,
-#     weight_decay=0.0001)  # this lr is used for 4 gpus
-# optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+optimizer = dict(
+    type='SGD', lr=0.00125*(6/8), momentum=0.9,
+    weight_decay=0.0001)  # this lr is used for 4 gpus
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
 lr_config = dict(policy='fixed')
 total_epochs = 50
