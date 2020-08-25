@@ -41,9 +41,10 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
+    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='CenterCrop', crop_size=240),
+    dict(type='RandomCrop', size=224),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -53,7 +54,7 @@ val_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -63,7 +64,7 @@ test_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=False),
+    dict(type='CenterCrop', crop_size=224),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -100,7 +101,7 @@ optimizer = dict(
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
 lr_config = dict(policy='fixed')
-total_epochs = 50
+total_epochs = 20
 checkpoint_config = dict(interval=5)
 evaluation = dict(
     interval=1, metrics=['mean_average_precision'],
