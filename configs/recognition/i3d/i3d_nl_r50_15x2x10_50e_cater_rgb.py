@@ -41,7 +41,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
+    dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10, jitter=True),
     dict(type='DecordDecode'),
     dict(type='Resize', scale=0.8, keep_ratio=True),
     dict(type='Normalize', **img_norm_cfg),
