@@ -19,15 +19,15 @@ model = dict(
     cls_head=dict(
         type='I3DHead',
         num_classes=14,
-        # in_channels=512,
-        in_channels=2048,
+        in_channels=512,
+        # in_channels=2048,
         spatial_type='avg',
         dropout_ratio=0.5,
         init_std=0.01,
         multi_class=True,
-        # consensus=dict(type='LSTMConsensus',
-        #                input_size=2048, hidden_size=512),
-        consensus=dict(type='AvgConsensus'),
+        consensus=dict(type='LSTMConsensus',
+                       input_size=2048, hidden_size=512),
+        # consensus=dict(type='AvgConsensus'),
         loss_cls=dict(type='BinaryLogisticRegressionLoss')))
 # model training and testing settings
 train_cfg = None
