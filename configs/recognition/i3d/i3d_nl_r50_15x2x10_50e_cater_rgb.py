@@ -35,7 +35,6 @@ test_cfg = dict(average_clips=None)
 # dataset settings
 dataset_type = 'VideoDataset'
 data_root = 'data/cater/max2action/videos/'
-data_root_val = 'data/cater/max2action/videos/'
 ann_file_train = 'data/cater/max2action/lists/actions_present/train_subsetT.txt'
 ann_file_val = 'data/cater/max2action/lists/actions_present/train_subsetV.txt'
 ann_file_test = 'data/cater/max2action/lists/actions_present/val.txt'
@@ -86,18 +85,18 @@ data = dict(
         ann_file=ann_file_val,
         multi_class=True,
         num_classes=14,
-        data_prefix=data_root_val,
+        data_prefix=data_root,
         pipeline=val_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=ann_file_val,
+        ann_file=ann_file_test,
         multi_class=True,
         num_classes=14,
-        data_prefix=data_root_val,
+        data_prefix=data_root,
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
-    type='SGD', lr=0.0125*(6/8), momentum=0.9,
+    type='SGD', lr=0.125*(6/8), momentum=0.9,
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
