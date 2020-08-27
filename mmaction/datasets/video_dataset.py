@@ -6,7 +6,7 @@ from mmcv.utils import print_log
 from ..core import mean_class_accuracy, top_k_accuracy, mean_average_precision
 from .base import BaseDataset
 from .registry import DATASETS
-from ...tools.data.cater.assess_model import assess_results
+from tools.data.cater.assess_model import assess_results
 
 
 @DATASETS.register_module()
