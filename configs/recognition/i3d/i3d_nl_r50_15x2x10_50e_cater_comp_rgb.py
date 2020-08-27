@@ -28,7 +28,7 @@ model = dict(
         consensus=dict(type='LSTMConsensus',
                        input_size=2048, hidden_size=512),
         # consensus=dict(type='AvgConsensus'),
-        loss_cls=dict(type='BinaryLogisticRegressionLoss')))
+        loss_cls=dict(type='BCELossWithLogits')))
 # model training and testing settings
 train_cfg = None
 test_cfg = dict(average_clips=None)
