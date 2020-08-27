@@ -204,6 +204,32 @@ class SequentialSampleFrames(object):
 
 
 @PIPELINES.register_module()
+class OverlapSampleFrames(object):
+    def __init__(self, clip_len, frame_interval=1, num_clips=1, jump=1, start_index=0):
+        self.clip_len = clip_len
+        self.frame_interval = frame_interval
+        self.num_clips = num_clips
+        self.jump = jump
+        self.start_index = start_index
+
+    def __call__(self, results):
+        total_frames = results['total_frames']
+
+        frame_inds = []
+        for i in range(self.num_clips):
+            start = self.start_index + i * self.jump
+            stop = start + self.frame_interval * self.clip_len
+            frame_inds.extend(list(range(start, stop, self.frame_interval)))
+        frame_inds = np.array(frame_inds, dtype=np.int)
+
+        results['frame_inds'] = frame_inds % total_frames
+        results['clip_len'] = self.clip_len
+        results['frame_interval'] = self.frame_interval
+        results['num_clips'] = self.num_clips
+        return results
+
+
+@PIPELINES.register_module()
 class UntrimmedSampleFrames(object):
     """Sample frames from the untrimmed video.
 

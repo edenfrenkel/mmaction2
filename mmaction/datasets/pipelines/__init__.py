@@ -9,11 +9,11 @@ from .loading import (DecordDecode, DecordInit, DenseSampleFrames,
                       LoadLocalizationFeature, LoadProposals, OpenCVDecode,
                       OpenCVInit, PyAVDecode, PyAVInit, RawFrameDecode,
                       SampleFrames, SampleProposalFrames,
-                      UntrimmedSampleFrames, SequentialSampleFrames)
+                      UntrimmedSampleFrames, SequentialSampleFrames, OverlapSampleFrames)
 
 __all__ = [
-    'SampleFrames', 'SequentialSampleFrames', 'PyAVDecode', 'DecordDecode', 'DenseSampleFrames',
-    'OpenCVDecode', 'FrameSelector', 'MultiGroupCrop', 'MultiScaleCrop',
+    'SampleFrames', 'SequentialSampleFrames', 'OverlapSampleFrames', 'PyAVDecode', 'DecordDecode',
+    'DenseSampleFrames', 'OpenCVDecode', 'FrameSelector', 'MultiGroupCrop', 'MultiScaleCrop',
     'RandomResizedCrop', 'RandomCrop', 'Resize', 'Flip', 'Fuse', 'Normalize',
     'ThreeCrop', 'CenterCrop', 'TenCrop', 'ImageToTensor', 'Transpose',
     'Collect', 'FormatShape', 'Compose', 'ToTensor', 'ToDataContainer',
