@@ -6,6 +6,7 @@ from mmcv.utils import print_log
 from ..core import mean_class_accuracy, top_k_accuracy, mean_average_precision
 from .base import BaseDataset
 from .registry import DATASETS
+from ...tools.data.cater.assess_model import assess_results
 
 
 @DATASETS.register_module()
@@ -39,8 +40,9 @@ class VideoDataset(BaseDataset):
         **kwargs: Keyword arguments for ``BaseDataset``.
     """
 
-    def __init__(self, ann_file, pipeline, start_index=0, **kwargs):
+    def __init__(self, ann_file, pipeline, start_index=0, eval_config=None, **kwargs):
         super().__init__(ann_file, pipeline, start_index=start_index, **kwargs)
+        self.eval_config = eval_config
 
     def load_annotations(self):
         """Load annotation file to get video information."""
@@ -128,6 +130,8 @@ class VideoDataset(BaseDataset):
                 continue
 
             if metric == 'mean_average_precision':
+                if self.eval_config is not None:
+                    assess_results(self.video_infos, results, self.eval_config['filename'], self.eval_config['is_comp'])
                 gt_labels = [label.cpu().numpy() for label in gt_labels]
                 mAP = mean_average_precision(results, gt_labels)
                 eval_results['mean_average_precision'] = mAP
