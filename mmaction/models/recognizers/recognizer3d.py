@@ -14,7 +14,7 @@ class Recognizer3D(BaseRecognizer):
 
         x = self.extract_feat(imgs)
         cls_score = self.cls_head(x, num_segs)
-        gt_labels = labels.squeeze()
+        gt_labels = labels.view(cls_score)
         loss = self.cls_head.loss(cls_score, gt_labels)
 
         return loss
