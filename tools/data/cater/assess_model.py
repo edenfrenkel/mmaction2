@@ -51,27 +51,30 @@ def assess_by_video(video_infos, results, classes):
     false_positives = np.zeros(len(video_infos), dtype=np.float)
     true_negatives = np.zeros(len(video_infos), dtype=np.float)
     false_negatives = np.zeros(len(video_infos), dtype=np.float)
-    classifications = [[] for _ in range(len(video_infos))]
-    predictions = [[] for _ in range(len(video_infos))]
+    classifications = {}
+    predictions = {}
+    names = [re.search(r'CATER_new_(\d+)', info['filename']).group(0) for info in video_infos]
 
     for i in range(len(video_infos)):
         labels = video_infos[i]['label']
+        cls = []
+        preds = []
         for j in range(len(classes)):
             if labels[j] == 1:
-                classifications[i].append(classes[j])
+                cls.append(classes[j])
                 if results[i][j] > 0:
-                    predictions[i].append(classes[j])
+                    preds.append(classes[j])
                     true_positives[i] += 1
                 else:
                     false_negatives[i] += 1
             else:
                 if results[i][j] > 0:
-                    predictions[i].append(classes[j])
+                    preds.append(classes[j])
                     false_positives[i] += 1
                 else:
                     true_negatives[i] += 1
-
-    names = [re.search(r'CATER_new_(\d+)', info['filename']).group(0) for info in video_infos]
+        classifications[names[i]] = cls
+        predictions[names[i]] = preds
 
     positives = true_positives + false_positives
     negatives = true_negatives + false_negatives
