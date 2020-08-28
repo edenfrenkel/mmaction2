@@ -21,15 +21,16 @@ class LSTMConsensus(nn.Module):
 
     def __init__(self, input_size, hidden_size, num_layers=1, batch_first=True):
         super().__init__()
-        self.h0 = Parameter(torch.zeros(hidden_size))
-        self.c0 = Parameter(torch.zeros(hidden_size))
+        self.h0 = Parameter(torch.zeros((num_layers, 1, hidden_size)))
+        self.c0 = Parameter(torch.zeros((num_layers, 1, hidden_size)))
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=batch_first)
         self.hidden_size = hidden_size
+        self.num_layers = num_layers
 
     def forward(self, x):
         """Defines the computation performed at every call."""
-        h0 = self.h0.repeat(x.size(0)).view(1, x.size(0), self.hidden_size)
-        c0 = self.c0.repeat(x.size(0)).view(1, x.size(0), self.hidden_size)
+        h0 = self.h0.repeat_interleave(x.size(0), dim=1)
+        c0 = self.c0.repeat_interleave(x.size(0), dim=1)
         ht = self.lstm(x.view(x.size(0), x.size(1), -1), (h0, c0))[0]
 
         return ht[:, -1, :].view(x.size(0), 1, self.hidden_size, *(x.size()[3:]))

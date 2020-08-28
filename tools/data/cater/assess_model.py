@@ -45,6 +45,10 @@ def assess_by_class(video_infos, results, classes):
             'false_negatives': fn_list}
 
 
+def assess_by_video(video_infos, results, classes):
+    pass
+
+
 def assess_results(video_infos, results, filename, is_comp=False):
     classes = get_comp_action_classes() if is_comp else get_action_classes()
 
