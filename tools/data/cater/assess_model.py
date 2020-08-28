@@ -84,12 +84,11 @@ def assess_by_video(video_infos, results, classes):
     false_negatives /= negatives
 
     greater_key = lambda x: -x[1]
-    lower_key = lambda x: x[1]
 
     tp_list = sorted([(names[i], true_positives[i]) for i in range(len(names))], key=greater_key)
     tn_list = sorted([(names[i], true_negatives[i]) for i in range(len(names))], key=greater_key)
-    fp_list = sorted([(names[i], false_positives[i]) for i in range(len(names))], key=lower_key)
-    fn_list = sorted([(names[i], false_negatives[i]) for i in range(len(names))], key=lower_key)
+    fp_list = sorted([(names[i], false_positives[i]) for i in range(len(names))], key=greater_key)
+    fn_list = sorted([(names[i], false_negatives[i]) for i in range(len(names))], key=greater_key)
 
     return {'true_positives': tp_list,
             'false_positives': fp_list,
