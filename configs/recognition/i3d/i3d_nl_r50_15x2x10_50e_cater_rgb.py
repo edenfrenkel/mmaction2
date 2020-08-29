@@ -44,8 +44,8 @@ train_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
-    # dict(type='CenterCrop', crop_size=(280, 190)),
+    # dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='CenterCrop', crop_size=(280, 190)),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -55,8 +55,8 @@ val_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
-    # dict(type='CenterCrop', crop_size=(280, 190)),
+    # dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='CenterCrop', crop_size=(280, 190)),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -66,8 +66,8 @@ test_pipeline = [
     dict(type='DecordInit'),
     dict(type='SequentialSampleFrames', clip_len=15, frame_interval=2, num_clips=10),
     dict(type='DecordDecode'),
-    dict(type='Resize', scale=0.8, keep_ratio=True),
-    # dict(type='CenterCrop', crop_size=(280, 190)),
+    # dict(type='Resize', scale=0.8, keep_ratio=True),
+    dict(type='CenterCrop', crop_size=(280, 190)),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='Collect', keys=['imgs', 'label'], meta_keys=[]),
@@ -100,11 +100,11 @@ data = dict(
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
-    type='SGD', lr=0.0125*(6/8), momentum=0.9,
+    type='SGD', lr=0.0125, momentum=0.9,
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='fixed')
+lr_config = dict(policy='step', step=[20])
 total_epochs = 50
 checkpoint_config = dict(interval=5)
 evaluation = dict(
