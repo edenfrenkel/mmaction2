@@ -104,7 +104,7 @@ optimizer = dict(
     weight_decay=0.0001)  # this lr is used for 4 gpus
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[20])
+lr_config = dict(policy='fixed')
 total_epochs = 50
 checkpoint_config = dict(interval=5)
 evaluation = dict(
