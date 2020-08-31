@@ -9,7 +9,7 @@ def assess_by_class(video_infos, results, classes):
     false_positives = np.zeros(len(classes), dtype=np.float)
     true_negatives = np.zeros(len(classes), dtype=np.float)
     false_negatives = np.zeros(len(classes), dtype=np.float)
-    confusions = np.zero((len(classes), len(classes)), dtype=np.float)
+    confusions = np.zeros((len(classes), len(classes)), dtype=np.float)
 
     for i in range(len(video_infos)):
         labels = video_infos[i]['label']
