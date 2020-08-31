@@ -27,6 +27,7 @@ def assess_by_class(video_infos, results, classes):
 
     conf_prop = confusions.max(axis=1) / confusions.sum(axis=1)
     conf_ind = confusions.argmax(axis=1)
+    conf_dense = confusions / confusions.sum(axis=1)[:, np.newaxis]
 
     greater_key = lambda x: -x[1]
 
@@ -35,12 +36,17 @@ def assess_by_class(video_infos, results, classes):
     fp_list = sorted([(classes[i], false_positives[i]) for i in range(len(classes))], key=greater_key)
     fn_list = sorted([(classes[i], false_negatives[i]) for i in range(len(classes))], key=greater_key)
     conf_list = sorted([(classes[i], conf_prop[i], classes[conf_ind[i]]) for i in range(len(classes))], key=greater_key)
+    full_conf_list = sorted([(classes[i], conf_prop[i],
+                              sorted([(classes[j], conf_dense[i, j]) for j in range(len(classes))],
+                                     key=greater_key))
+                             for i in range(len(classes))], key=greater_key)
 
     return {'true_positives': tp_list,
             'false_positives': fp_list,
             'true_negatives': tn_list,
             'false_negatives': fn_list,
-            'confusion': conf_list}
+            'confusion': conf_list,
+            'full_confusion': full_conf_list}
 
 
 def assess_by_video(video_infos, results, classes):
