@@ -24,14 +24,6 @@ def assess_by_class(video_infos, results, classes):
                 else:
                     true_negatives[j] += 1
 
-    positives = true_positives + false_positives
-    negatives = true_negatives + false_negatives
-
-    true_positives /= positives
-    false_positives /= positives
-    true_negatives /= negatives
-    false_negatives /= negatives
-
     greater_key = lambda x: -x[1]
 
     tp_list = sorted([(classes[i], true_positives[i]) for i in range(len(classes))], key=greater_key)
@@ -74,14 +66,6 @@ def assess_by_video(video_infos, results, classes):
                     true_negatives[i] += 1
         classifications[names[i]] = cls
         predictions[names[i]] = preds
-
-    positives = true_positives + false_positives
-    negatives = true_negatives + false_negatives
-
-    true_positives /= positives
-    false_positives /= positives
-    true_negatives /= negatives
-    false_negatives /= negatives
 
     greater_key = lambda x: -x[1]
 
