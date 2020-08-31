@@ -40,7 +40,7 @@ def get_action_classes():
 def get_comp_action_classes():
     def reverse(order):
         if order == _DURING:
-            return el
+            return _DURING
         elif order == _BEFORE:
             return _AFTER
         elif order == _AFTER:
