@@ -7,25 +7,25 @@ from itertools import product
 
 ACTION_CLASSES = [
     # object, movement
-    ('sphere', '_slide'),
-    ('sphere', '_pick_place'),
-    ('spl', '_slide'),
-    ('spl', '_pick_place'),
-    ('spl', '_rotate'),
-    ('cylinder', '_pick_place'),
-    ('cylinder', '_slide'),
-    ('cylinder', '_rotate'),
-    ('cube', '_slide'),
-    ('cube', '_pick_place'),
-    ('cube', '_rotate'),
-    ('cone', '_contain'),
-    ('cone', '_pick_place'),
-    ('cone', '_slide'),
+    'sphere slide',
+    'sphere pick_place',
+    'spl slide',
+    'spl pick_place',
+    'spl rotate',
+    'cylinder pick_place',
+    'cylinder slide',
+    'cylinder rotate',
+    'cube slide',
+    'cube pick_place',
+    'cube rotate',
+    'cone contain',
+    'cone pick_place',
+    'cone slide',
 ]
 
-_BEFORE = 'before'
-_AFTER = 'after'
-_DURING = 'during'
+_BEFORE = 'BEFORE'
+_AFTER = 'AFTER'
+_DURING = 'DURING'
 ORDERING = [
     _BEFORE,
     _DURING,
@@ -38,22 +38,22 @@ def get_action_classes():
 
 
 def get_comp_action_classes():
-    def reverse(el):
-        if el == _DURING:
+    def reverse(order):
+        if order == _DURING:
             return el
-        elif el == _BEFORE:
+        elif order == _BEFORE:
             return _AFTER
-        elif el == _AFTER:
+        elif order == _AFTER:
             return _BEFORE
-        else:
-            raise ValueError('This should not happen')
 
     action_sets = list(product(ACTION_CLASSES, repeat=2))
     classes = list(product(action_sets, ORDERING))
 
     classes_uniq = []
     for el in classes:
-        if el not in classes_uniq and ((el[0][1], el[0][0]), reverse(el[1])) not in classes_uniq:
-            classes_uniq.append(el)
+        cls = el[0][0] + ' ' + el[1] + ' ' + el[0][1]
+        reverse_cls = el[0][1] + ' ' + reverse(el[1]) + ' ' + el[0][0]
+        if cls not in classes_uniq and reverse_cls not in classes_uniq:
+            classes_uniq.append(cls)
 
     return classes_uniq
