@@ -12,7 +12,7 @@ def assess_by_class(video_infos, results, classes):
     confusions = np.zeros((len(classes), len(classes)), dtype=np.float)
 
     for i in range(len(video_infos)):
-        labels = video_infos[i]['label']
+        labels = video_infos[i]['label'].cpu().numpy()
         result = np.array([1 if results[i][j] > 0 else 0
                            for j in range(len(classes))], dtype=np.float)
         both = labels * result
