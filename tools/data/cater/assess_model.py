@@ -26,11 +26,13 @@ def assess_by_class(video_infos, results, classes):
         confusions[just_labels == 1] += just_result
 
     conf_max = confusions.max(axis=1)
-    conf_sum = confusions.sum(axis=1)
-    conf_prop = np.divide(conf_max, conf_sum, out=np.zeros_like(conf_max), where=conf_max!=0)
+    norm = false_negatives
+    conf_prop = np.divide(conf_max, norm, out=np.zeros_like(conf_max), where=norm!=0)
+
     conf_ind = confusions.argmax(axis=1)
-    conf_sum = conf_sum[:, np.newaxis]
-    conf_dense = np.divide(confusions, conf_sum, out=np.zeros_like(confusions), where=conf_sum!=0)
+
+    norm = norm[:, np.newaxis]
+    conf_dense = np.divide(confusions, norm, out=np.zeros_like(confusions), where=norm!=0)
 
     greater_key = lambda x: -x[1]
 
