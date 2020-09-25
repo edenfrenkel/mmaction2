@@ -119,7 +119,7 @@ log_config = dict(
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/i3d_nl_r50_15x2x10_50e_cater_comp_2_rgb/'
+work_dir = './work_dirs/i3d_nl_r50_25x2x6_50e_cater_comp_2_rgb/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

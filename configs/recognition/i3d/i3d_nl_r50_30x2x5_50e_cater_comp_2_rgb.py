@@ -42,7 +42,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
 train_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=10, frame_interval=2, num_clips=15),
+    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5),
     dict(type='DecordDecode'),
     # dict(type='Resize', scale=0.8, keep_ratio=True),
     dict(type='CenterCrop', crop_size=(280, 190)),
@@ -53,7 +53,7 @@ train_pipeline = [
 ]
 val_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=10, frame_interval=2, num_clips=15),
+    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5),
     dict(type='DecordDecode'),
     # dict(type='Resize', scale=0.8, keep_ratio=True),
     dict(type='CenterCrop', crop_size=(280, 190)),
@@ -64,7 +64,7 @@ val_pipeline = [
 ]
 test_pipeline = [
     dict(type='DecordInit'),
-    dict(type='SequentialSampleFrames', clip_len=10, frame_interval=2, num_clips=15),
+    dict(type='SequentialSampleFrames', clip_len=30, frame_interval=2, num_clips=5),
     dict(type='DecordDecode'),
     # dict(type='Resize', scale=0.8, keep_ratio=True),
     dict(type='CenterCrop', crop_size=(280, 190)),
@@ -119,7 +119,7 @@ log_config = dict(
 # runtime settings
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/i3d_nl_r50_10x2x15_50e_cater_comp_2_rgb/'
+work_dir = './work_dirs/i3d_nl_r50_30x2x5_50e_cater_comp_2_rgb/'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
